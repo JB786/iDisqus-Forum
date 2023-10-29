@@ -33,6 +33,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         
     }
+    // header("location: /Forum/index.php");
+
      
 }
 

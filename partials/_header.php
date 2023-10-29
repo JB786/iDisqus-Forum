@@ -49,8 +49,8 @@ else{
                 <input class="form-control" type="search" placeholder="Search" aria-label="Search" style="width: 500px; transform: translate(-50px);">
                 <button class="btn btn-sm btn-outline-warning me-5" type="submit" style="transform: translate(-45px);">Search</button>
                 </form>
-                <p class="mb-0 me-2"><em>Welcome! ' .$_SESSION["username"].'</em></p>
-                <button class="btn btn-sm btn-dark me-1" type="submit" data-bs-toggle="modal" data-bs-target="#loginModal">Logout</button>';
+                <p class="mb-0 me-2 text-light fw-bold"><em>Welcome! ' .$_SESSION["username"].'</em></p>
+                <a href="./partials/_logout.php" class="btn btn-sm btn-dark me-1">Logout</a>';
                 
             }
 
@@ -74,7 +74,7 @@ else{
     }
   if(isset($_GET['successlogin']) && $_GET['successlogin'] == true){
     echo '<div class="alert alert-success alert-dismissible fade show mb-0" role="alert">
-<strong>Welcome!</strong> You are logged in successfully.
+<strong>Welcome!</strong> You have logged in successfully.
 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>';
   }

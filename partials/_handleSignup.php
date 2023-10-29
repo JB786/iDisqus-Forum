@@ -1,4 +1,5 @@
 <?php
+
 $exists = false;
 $login = false;
 $showErrorAlert = false;
@@ -6,7 +7,7 @@ $showSuccessAlert = false;
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
     
-    include "./partials/_dbconnect.php";
+    include "_dbconnect.php";
 
     $username = $_POST["username"];
     $email = $_POST["email"];
@@ -48,7 +49,5 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         header("location: /Forum/index.php?signupsuccess=false&error=$showErrorAlert");
     }
     // Close the database connection
-    mysqli_close($conn);
+    // mysqli_close($conn);
 }
-
-?>
