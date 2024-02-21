@@ -23,6 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
                 $_SESSION["loggedIn"] = true;
                 $_SESSION["username"] = $username;
+                $_SESSION['sno'] = $row['sno'];
                 
                 header("location: /Forum/index.php?successlogin=true");
             }

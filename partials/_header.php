@@ -1,4 +1,7 @@
 <?php
+
+require "_dbconnect.php";
+
 session_start();
 
 if(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"] == true){
@@ -30,23 +33,27 @@ else{
                 </li>
                 <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Categories
+                Top Categories
                 </a>
-                <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li>
-                <hr class="dropdown-divider">
-                </li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
+                <ul class="dropdown-menu">';
+
+                $sql = 'SELECT category_name, category_id FROM `category` LIMIT 5';
+                $query = mysqli_query($conn, $sql);
+                while($row = mysqli_fetch_assoc($query)){
+
+                    
+                    echo '<li><a class="dropdown-item" href="threadlist.php?catid='.$row['category_id'].'">'.$row['category_name'].'</a></li>';
+                    
+                }
+                
+                echo '</ul>
                 </li>
                 <li class="nav-item">
                 <a class="nav-link" href="contact.php">Contact</a>
                 </li>
                 </ul>
-                <form class="d-flex" role="search">
-                <input class="form-control" type="search" placeholder="Search" aria-label="Search" style="width: 500px; transform: translate(-50px);">
+                <form class="d-flex" role="search" method="get" action="results.php">
+                <input class="form-control" name="search" type="search" placeholder="Search" aria-label="Search" style="transform: translate(-50px);">
                 <button class="btn btn-sm btn-outline-warning me-5" type="submit" style="transform: translate(-45px);">Search</button>
                 </form>
                 <p class="mb-0 me-2 text-light fw-bold"><em>Welcome! ' .$_SESSION["username"].'</em></p>

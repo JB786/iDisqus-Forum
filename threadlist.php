@@ -13,14 +13,18 @@
         #ques {
             min-height: 433px;
         }
+        .datetime-string{
+            color: grey;
+            font-size: 13px;
+        }
     </style>
     <title>Welcome to iDiscuss - Coding Forums</title>
 </head>
 
 <body>
 
-    <?php include './partials/_header.php'; ?>
     <?php include './partials/_dbconnect.php'; ?>
+    <?php include './partials/_header.php'; ?>
     <?php
     $id = $_GET['catid'];
     $sql = "SELECT * FROM `category` WHERE category_id=$id";
@@ -40,7 +44,14 @@
         $th_title = $_POST['title'];
         $th_desc = $_POST['desc'];
 
-        $sql = "INSERT INTO threads (thread_title, thread_description, thread_cat_id, thread_user_id) VALUES ('$th_title', '$th_desc', '$id', 0)";
+        $th_title = str_replace("<", "&lt;", $th_title);
+        $th_title = str_replace(">", "&gt;", $th_title);
+
+        $th_desc = str_replace("<", "&lt;", $th_desc);
+        $th_desc = str_replace(">", "&gt;", $th_desc);
+
+        $sno = $_POST['sno'];
+        $sql = "INSERT INTO threads (thread_title, thread_description, thread_cat_id, thread_user_id) VALUES ('$th_title', '$th_desc', '$id', '$sno')";
         $result = mysqli_query($conn, $sql);
         $showAlert = true;
 
@@ -68,38 +79,35 @@
         </div>
     </div>
 
-    <!-- <?php
-            // if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
-            // echo '';
-            // } else {
-            //     echo '
+    
+    <?php
+    if(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] == true){
 
-            //     <div class="container my-5">
-            //     <h1 class="py-2">Post a Comment</h1> 
-            //        <p class="lead">You are not logged in. Please login to be able to post comments.</p>
-            //     </div>
-            //     ';
-            // }
+        echo '<div class="container my-5">
+            <h1 class="py-2">Start a Discussion</h1>
+            <form action="'.$_SERVER["REQUEST_URI"] .'" method="post">
+                <div class="form-group">
+                    <label for="title">Thread Title</label>
+                    <input class="form-control" type="text" name="title" id="title"     aria-describedby="titleHelp">
+                    <small id="titleHelp" class="form-text text-muted">Keep your title short and crisp</small>
+                </div>
+                <div class="form-group">
+                    <label for="desc">Thread Statement</label>
+                    <textarea class="form-control" id="desc" name="desc" rows="3"></textarea>
+                    <input type="hidden" name="sno" value="'. $_SESSION['sno'] .'">
+                </div>
+                <button type="submit" class="btn btn-danger">Post Thread</button>
+            </form>
+        </div>';
 
-            ?> -->
+    }else{
 
-    <div class="container my-5">
-        <h1 class="py-2">Start a Discussion</h1>
-        <form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post">
-            <div class="form-group">
-                <label for="title">Thread Title</label>
-                <input class="form-control" type="text" name="title" id="title" aria-describedby="titleHelp">
-                <small id="titleHelp" class="form-text text-muted">Keep your title short and crisp</small>
-            </div>
-            <div class="form-group">
-                <label for="desc">Thread Statement</label>
-                <textarea class="form-control" id="desc" name="desc" rows="3"></textarea>
-            </div>
-            <button type="submit" class="btn btn-danger">Post Thread</button>
-        </form>
-    </div>
+    echo '<h2 class="text-center">Wants To Start A Discussion, Sign In Today!</h2>';
+    }
 
-    <div class="container mt-4" id="ques">
+    ?>
+
+    <div class="container mt-4 mb-5" id="ques">
         <h1 class="py-2 mt-5">Browse Questions</h1>
         <?php
         $id = $_GET['catid'];
@@ -113,11 +121,18 @@
             $id = $row['thread_id'];
             $title = $row['thread_title'];
             $desc = $row['thread_description'];
+            $thread_time =$row['created'];
+            $thread_user_id = $row['thread_user_id'];
+
+            $sql2 = "SELECT username FROM `users` WHERE sno =$thread_user_id";
+            $result2 = mysqli_query($conn, $sql2);
+            $row2 = mysqli_fetch_assoc($result2);
 
             echo '<div class="media my-3">
             <img src="img/userdefault.png" width="54px" class="mr-3" alt="...">
             <div class="media-body">
               <h5 class "mt-0"><a class="text-dark" href="./thread.php?threadid= ' . $id . '">' . $title . '</a></h5>
+              <p class="font-weight-bold my-1 datetime-string"><em>Posted by: </em>'.$row2['username'].' at '. $thread_time. '</p>
               ' . $desc . '
             </div>
         </div>';

@@ -15,6 +15,10 @@
     #ques {
         min-height: 433px;
     }
+    .datetime-string{
+            color: grey;
+            font-size: 13px;
+        }
     </style>
     <title>Welcome to iDiscuss - Coding Forums</title>
 </head>
@@ -32,10 +36,10 @@
         $thread_user_id = $row['thread_user_id'];
 
         // Query the users table to find out the name of OP
-        $sql2 = "SELECT email FROM `users` WHERE sno='$thread_user_id'";
+        $sql2 = "SELECT username FROM `users` WHERE sno='$thread_user_id'";
         $result2 = mysqli_query($conn, $sql2);
         $row2 = mysqli_fetch_assoc($result2);
-        $posted_by = $row2['email'];
+        $posted_by = $row2['username'];
     }
     
     ?>
@@ -73,38 +77,34 @@
             <p>This is a peer to peer forum. No Spam / Advertising / Self-promote in the forums is not allowed. Do not
                 post copyright-infringing material. Do not post “offensive” posts, links or images. Do not cross post
                 questions. Remain respectful of other members at all times.</p>
-            <p>Posted by: <em><?php echo $posted_by; ?></em></p>
+            <p>Posted by: <em><strong><?php echo $posted_by; ?></strong></em></p>
         </div>
     </div>
 
-    <!-- <?php 
-    if(isset($_SESSION['loggedin']) && $_SESSION['loggedin']==true){ 
-    echo '
-    ';
-}
-else{
-    echo '
     
-    <div class="container">
-    <h1 class="py-2">Post a Comment</h1> 
-    <p class="lead">You are not logged in. Please login to be able to post comments.</p>
-    </div>
-    ';
-}
 
-?> -->
+<?php
 
-    <div class="container">
-        <h1 class="py-2">Post a Comment</h1>
-        <form action="<?php $_SERVER['REQUEST_URI']?>" method="post">
-            <div class="form-group">
-                <label for="exampleFormControlTextarea1">Type your comment</label>
-                <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
-                <!-- <input type="hidden" name="sno" value="'. $_SESSION[" sno"]. '"> -->
-            </div>
-            <button type="submit" class="btn btn-success">Post Comment</button>
-        </form> 
-    </div>
+    if(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] == true)
+    { 
+        echo '<div class="container">
+            <h1 class="py-2">Post a Comment</h1>
+            <form action="' .$_SERVER["REQUEST_URI"] .'" method="post">
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Type your comment</label>
+                    <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+                    <input type="hidden" name="sno" value="'. $_SESSION['sno'] .'">
+                </div>
+                <button type="submit" class="btn btn-success">Post Comment</button>
+            </form> 
+        </div>';
+    }
+
+    else{
+        echo '<h2 class="text-center">Wants To Post A Comment, Sign In Today!</h2>';
+    }
+
+?>    
 
     <div class="container mb-5" id="ques">
         <h1 class="py-2">Discussions</h1>
@@ -120,14 +120,15 @@ else{
         $comment_time = $row['comment_time']; 
         $thread_user_id = $row['comment_by']; 
 
-        $sql2 = "SELECT email FROM `users` WHERE sno='$thread_user_id'";
+        $sql2 = "SELECT username FROM `users` WHERE sno=$thread_user_id";
         $result2 = mysqli_query($conn, $sql2);
         $row2 = mysqli_fetch_assoc($result2);
 
         echo '<div class="media my-3">
             <img src="img/userdefault.png" width="54px" class="mr-3" alt="...">
             <div class="media-body">
-               <p class="font-weight-bold my-0">'. $row2['email'] .' at '. $comment_time. '</p> '. $content . '
+            '. $content . '
+               <p class="my-1 datetime-string">Posted by: ' .$row2['username']. ' at '. $comment_time. '</p>
             </div>
         </div>';
 
@@ -137,7 +138,7 @@ else{
         if($noResult){
             echo '<div class="jumbotron jumbotron-fluid">
                     <div class="container">
-                        <p class="display-4">No Comments Found</p>
+                        <p class="display-4">No Comments Found!</p>
                         <p class="lead"> Be the first person to comment</p>
                     </div>
                  </div> ';
